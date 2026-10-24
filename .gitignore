@@ -23,11 +23,7 @@ instance/
 # ── IDE / OS ──────────────────────────────────────────────────────────────────
 .vscode/
 .idea/
-.DS_Store
-Thumbs.db
 
 # ── Local tooling & personal notes ────────────────────────────────────────────
 .claude/
-.mcp.json
-NEXT_STEPS.md
-suggestions.md
+notes.md

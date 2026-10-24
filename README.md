@@ -17,7 +17,7 @@ python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 cp .env.example .env               # then set SECRET_KEY (command is in the file)
-# fill in config.py (at least PERSONAL.first_name, or the app refuses to start)
+# fill in config.py (at least PERSONAL.first_name, or the app refuses to start) 
 flask --app wsgi run
 ```
 
@@ -102,7 +102,4 @@ Any host that runs `gunicorn wsgi:app` works (a `Procfile` is included). Set the
 
 ## Credits
 
-- **Terminal theme** and original content structure: Rafael Grossmann ([cturpn](https://github.com/cturpn))
-- **Editorial theme** design, security hardening and site assistant: Timothy Victor Osas ([Osvic1](https://github.com/Osvic1))
-
-<!-- TODO before publishing: confirm Timothy's permission and add a LICENSE file. -->
+- Idea, initial template & chatbot integration: Timothy Victor Osas ([Osvic1](https://github.com/Osvic1))
