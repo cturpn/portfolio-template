@@ -23,21 +23,6 @@ flask --app wsgi run
 
 Open http://127.0.0.1:5000. The session cookie is `Secure`, which browsers allow on `localhost`.
 
-## Make it yours
-
-1. Edit **`config.py`**. Every section is commented. To start from scratch, look at `config_example.py`, which uses every option.
-2. Put images in `static/images/` and refer to them as `"images/name.png"`, or use full `https://` URLs.
-3. Put your CV in `static/resume/` as a PDF. `/resume` serves the first PDF it finds there.
-
-Text fields accept two markers: `**bold**` and `*accent*`. The accent renders as green text in `terminal` and as serif italic in `editorial`.
-
-If something in `config.py` is missing or has the wrong type, the app refuses to start and lists every problem, for example:
-
-```
-content.ConfigError: config.py has problems:
-  - PERSONAL.available: expected bool, got str
-  - HOME.featured: no project with slug 'website-monitr'
-```
 
 ### Config reference
 
@@ -65,16 +50,6 @@ Set `THEME` in `config.py`, or preview another theme without editing it:
 PORTFOLIO_THEME=editorial flask --app wsgi run
 PORTFOLIO_CONFIG=config_example flask --app wsgi run    # preview the example content
 ```
-
-## Adding a theme
-
-A theme is a folder under `themes/` with a `theme.css`, and optionally a `theme.js`. Nothing else.
-
-1. Copy a theme folder, e.g. `themes/editorial`, to `themes/mytheme`.
-2. In `theme.css`, override the tokens defined at the top of `static/css/site.css`: colours (for `:root` and `:root[data-theme="light"]`), `--font-sans`, `--font-mono`, `--font-display` (headings), `--em-font` / `--em-style` (the `*accent*` text), and `--radius` / `--radius-lg`. Add small rules for anything else. Web fonts can come in via `@import` from Google Fonts.
-3. `theme.js` is loaded after `static/js/core.js` when present (the terminal theme uses it for matrix rain). Keep it self-contained, respect `prefers-reduced-motion`, and don't load third-party scripts: the CSP blocks them.
-
-Layout changes go in the shared `templates/` and `static/css/site.css`, so every theme gets them.
 
 ## Security
 
