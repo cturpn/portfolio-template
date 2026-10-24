@@ -103,3 +103,8 @@ Any host that runs `gunicorn wsgi:app` works (a `Procfile` is included). Set the
 ## Credits
 
 - Idea, initial template & chatbot integration: Timothy Victor Osas ([Osvic1](https://github.com/Osvic1))
+
+## AI Usage
+
+AI was used to assist in formatting, documenting and writing sections of the template. 
+All code that is in this repo has been reviewed by me. 
