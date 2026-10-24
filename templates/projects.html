@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, chips, ext, filters %}
+{% from "_work.html" import project_visual %}
+{% block content %}
+
+<section class="hero hero-page">
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="prompt eyebrow-hero reveal"><b>$</b>{{ pages.projects.command }}</div>
+    <h1 class="h1 reveal headline-narrow" style="--d:80ms;">{{ pages.projects.headline|rich }}</h1>
+    {% if pages.projects.lead %}<p class="lead lead-gap reveal" style="--d:160ms;">{{ pages.projects.lead }}</p>{% endif %}
+  </div>
+</section>
+
+<section class="section-end">
+  <div class="container">
+    {{ filters(projects, groups) }}
+
+    <div id="cases">
+      {% for p in projects %}
+      <article class="card case reveal{{ ' no-visual' if not (p.images or p.severity or p.preview) }}" id="{{ p.slug }}" data-group="{{ p.group }}">
+        {{ project_visual(p) }}
+        <div class="case-body">
+          <div class="work-kicker">{{ p.category }}</div>
+          <h2 class="h3 case-title">{{ p.title }}</h2>
+          {% if p.role %}<div class="case-role">{{ p.role }}</div>{% endif %}
+          <p class="muted">{{ p.description }}</p>
+          {% if p.scope %}<div class="case-scope">{{ chips(p.scope) }}</div>{% endif %}
+          {% if p.highlights %}<ul class="case-list">{% for h in p.highlights %}<li>{{ h }}</li>{% endfor %}</ul>{% endif %}
+          <div class="case-foot">
+            <div class="chips">{{ chips(p.tags) }}</div>
+            {% if p.link %}
+            <a href="{{ p.link }}" class="link-arrow"{{ ext(p.link) }}>{{ p.link_label }} {{ icon("arrow-up-right", 14) }}</a>
+            {% elif p.note %}
+            <span class="note">{{ icon("lock", 14) }} {{ p.note }}</span>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

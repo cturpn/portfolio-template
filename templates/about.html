@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, chips, ext %}
+{% block content %}
+
+<section class="hero hero-page">
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="prompt eyebrow-hero reveal"><b>$</b>{{ pages.about.command }}</div>
+    <h1 class="h1 reveal headline-narrow" style="--d:80ms;">{{ about.headline|rich }}</h1>
+  </div>
+</section>
+
+<section class="section pt-sm">
+  <div class="container split split-wide">
+    <div class="prose reveal">
+      {% if about.quote %}<blockquote class="quote">{{ about.quote }}</blockquote>{% endif %}
+      {% for para in about.paragraphs %}<p>{{ para|rich }}</p>{% endfor %}
+      {% if about.skills %}<div class="chips chips-gap">{{ chips(about.skills) }}</div>{% endif %}
+      <div class="btn-row">
+        <a href="{{ url_for('contact') }}" class="btn btn-primary">Get in touch {{ icon("arrow-right", 17) }}</a>
+        <a href="{{ url_for('resume') }}" class="btn btn-ghost" target="_blank" rel="noopener">{{ icon("download", 17) }} Résumé</a>
+      </div>
+    </div>
+
+    <aside class="card aside-card reveal" style="--d:80ms;">
+      {% if personal.photo %}
+      <div class="aside-photo">
+        <img class="photo-lg" src="{{ personal.photo|media }}" alt="{{ personal.full_name }}" width="72" height="72"/>
+        <div><strong>{{ personal.full_name }}</strong><div class="muted">{{ personal.tagline or personal.roles[0] }}</div></div>
+      </div>
+      {% else %}
+      <div class="eyebrow eyebrow-sm">At a glance</div>
+      {% endif %}
+      <dl class="facts">
+        {% if personal.location %}<div><dt>Based in</dt><dd>{{ personal.location }}</dd></div>{% endif %}
+        {% if personal.timezone %}<div><dt>Time zone</dt><dd>{{ personal.timezone }}</dd></div>{% endif %}
+        {% for f in about.facts %}<div><dt>{{ f.label }}</dt><dd>{{ f.value }}</dd></div>{% endfor %}
+        <div><dt>Status</dt><dd class="status-dd"><span class="dot{{ '' if personal.available else ' off' }}"></span> {{ personal.status_text }}</dd></div>
+      </dl>
+      {% set about_links = links_for("about") %}
+      {% if about_links %}
+      <div class="icon-row">
+        {% for l in about_links %}<a class="icon-btn" href="{{ l.url }}"{{ ext(l) }} aria-label="{{ l.label }}">{{ icon(l.icon, 17) }}</a>{% endfor %}
+      </div>
+      {% endif %}
+    </aside>
+  </div>
+</section>
+
+{% if about.principles %}
+<section class="section pt-0">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">How I work</div>
+        <h2 class="h2">{{ about.principles|length }} <em>principles</em>.</h2>
+      </div>
+    </div>
+    <div class="principles">
+      {% for pr in about.principles %}
+      <article class="card principle reveal" style="--d:{{ (loop.index0 % 3) * 80 }}ms;">
+        <span class="mono">{{ "%02d"|format(loop.index) }}</span>
+        <h3 class="h3">{{ pr.title }}</h3>
+        <p>{{ pr.text }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% set toolkit = about.toolkit or home.skill_groups %}
+{% if toolkit %}
+<section class="section pt-0">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Toolkit</div>
+        <h2 class="h2">What I work <em>with</em>.</h2>
+      </div>
+    </div>
+    <div class="toolkit">
+      {% for t in toolkit %}
+      <div class="card reveal" style="--d:{{ (loop.index0 % 4) * 60 }}ms;"><h4>{{ t.title }}</h4><div class="chips">{{ chips(t.tags) }}</div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block content %}
+<section class="hero">
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="prompt eyebrow-hero"><b>$</b>cd {{ request.path }}</div>
+    <div class="error-code">{{ title.split('–')[0]|trim }}</div>
+    <h1 class="h2 error-title">{{ title.split('–')[1]|trim if '–' in title else title }}</h1>
+    <p class="lead lead-gap">This page doesn't exist or isn't available. Let's get you back on track.</p>
+    <div class="hero-actions">
+      <a href="{{ url_for('home') }}" class="btn btn-primary">Back to home {{ icon("arrow-right", 17) }}</a>
+      <a href="{{ url_for('projects') }}" class="btn btn-ghost">See my work</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

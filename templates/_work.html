@@ -1,0 +1,32 @@
+{% from "_macros.html" import icon, visual %}
+
+{#- Screenshots or severity summary if the project has them, else an optional terminal preview:
+    "preview": ["$ nmap -sV 10.0.0.0/24", "22/tcp open ssh", ...] -#}
+{% macro project_visual(p) -%}
+{% if p.images or p.severity %}{{ visual(p) }}
+{% elif p.preview %}
+<div class="term-visual" aria-hidden="true">
+  <div class="bar"><i></i><i></i><i></i></div>
+  {% for line in p.preview %}
+  <div class="line">{% if line.startswith("$ ") %}<span class="p">$</span> {{ line[2:] }}{% else %}{{ line }}{% endif %}</div>
+  {% endfor %}
+</div>
+{% endif %}
+{%- endmacro %}
+
+{% macro work_card(p, delay=0) -%}
+<a href="{{ url_for('projects') }}#{{ p.slug }}" class="card work-card reveal" style="--d:{{ delay }}ms;">
+  {{ project_visual(p) }}
+  <div class="work-body">
+    <div class="work-meta">
+      <span class="work-kicker">{{ p.category.split(' · ')[0] }}</span>
+      <span class="arrow-badge">{{ icon("arrow-up-right", 16) }}</span>
+    </div>
+    <h3 class="h3">{{ p.title }}</h3>
+    <p class="muted work-summary">{{ p.summary }}</p>
+    {% if p.metric %}
+    <div class="work-metric"><strong>{{ p.metric[0] }}</strong><span>{{ p.metric[1] }}</span></div>
+    {% endif %}
+  </div>
+</a>
+{%- endmacro %}

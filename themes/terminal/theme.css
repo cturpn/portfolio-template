@@ -1,0 +1,49 @@
+/* Terminal theme: hacker-terminal look (neon green, mono everywhere, scanlines, matrix rain).
+   Original design by Rafael Grossmann (cturpn). Dark only. */
+@import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;600;700;800&display=swap");
+
+/* Same palette for both selectors, so a stored light preference can't switch it */
+:root, :root[data-theme="light"] {
+  --bg:          #030712;
+  --bg-elev:     #0d1117;
+  --surface:     #0d1117;
+  --surface-2:   #161b22;
+  --line:        rgba(0,255,136,0.15);
+  --line-strong: rgba(0,255,136,0.3);
+  --text:        #c9d1d9;
+  --muted:       #9aa4ae;
+  --faint:       #8b949e;
+  --accent:      #00ff88;
+  --accent-soft: rgba(0,255,136,0.1);
+  --accent-ink:  #030712;
+  --glow:        rgba(0,255,136,0.08);
+  --shadow:      none;
+  --sev-critical: #ff3e3e;
+  --sev-high:     #ff8c42;
+  --sev-medium:   #ffd700;
+  --sev-low:      #00d4ff;
+  --sev-info:     #8b949e;
+
+  --font-sans:    "Syne", system-ui, sans-serif;
+  --font-mono:    "Share Tech Mono", ui-monospace, monospace;
+  --font-display: var(--font-mono);
+
+  --radius:    4px;
+  --radius-lg: 6px;
+  color-scheme: dark;
+}
+
+.theme-toggle { display: none; }
+.display, .h1, .h2, .h3 { color: #fff; letter-spacing: -0.01em; }
+.display { text-shadow: 0 0 24px var(--accent-soft); }
+.nav-links a { text-transform: uppercase; letter-spacing: .1em; font-size: 12px; border-radius: 4px; }
+.btn { border-radius: 4px; letter-spacing: .05em; }
+.btn-primary:hover, .btn-accent:hover { box-shadow: 0 0 18px rgba(0,255,136,.35); }
+.bg-grid { opacity: .35; }
+
+/* Scanlines over everything, matrix rain (theme.js) behind everything */
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 300;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.08) 2px, rgba(0,0,0,.08) 4px);
+}
+.matrix { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: -2; opacity: .05; }

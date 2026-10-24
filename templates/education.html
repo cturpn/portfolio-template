@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, ext %}
+{% block content %}
+
+<section class="hero hero-page">
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="prompt eyebrow-hero reveal"><b>$</b>{{ pages.education.command }}</div>
+    <h1 class="h1 reveal headline-narrow" style="--d:80ms;">{{ pages.education.headline|rich }}</h1>
+    {% if pages.education.lead %}<p class="lead lead-gap reveal" style="--d:160ms;">{{ pages.education.lead }}</p>{% endif %}
+  </div>
+</section>
+
+<section class="section pt-sm">
+  <div class="container">
+    {% if certifications %}
+    <div class="cert-grid">
+      {% for c in certifications %}
+      <div class="card cert reveal" style="--d:{{ (loop.index0 % 2) * 60 }}ms;">
+        <div class="icon-wrap">{{ icon(c.icon, 20) }}</div>
+        <div>
+          <h2 class="h3 cert-name">{{ c.name }}</h2>
+          <p class="faint mono cert-meta">{{ c.issuer }}{% if c.year %} · {{ c.year }}{% endif %}</p>
+          {% if c.url %}<a class="cert-verify" href="{{ c.url }}"{{ ext(c.url) }}>Verify {{ icon("arrow-up-right", 13) }}</a>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if items %}
+    <div class="section-head{{ ' section-gap' if certifications }}">
+      <div>
+        <div class="eyebrow">Education</div>
+        <h2 class="h2">Where it <em>started</em>.</h2>
+      </div>
+    </div>
+    {% for item in items %}
+    <article class="card edu-card reveal">
+      <div>
+        <div class="eyebrow eyebrow-sm">{{ item.period }}</div>
+        <h3 class="h3 edu-title">{{ item.school or item.title }}</h3>
+        <p class="muted edu-sub">{{ item.title if item.school else item.subtitle }}{% if item.school and item.subtitle %} · {{ item.subtitle }}{% endif %}</p>
+        {% if item.notes %}<ul>{% for n in item.notes %}<li>{{ n }}</li>{% endfor %}</ul>{% endif %}
+        {% if item.link %}<a href="{{ item.link.url }}"{{ ext(item.link.url) }} class="link-arrow edu-link">{{ item.link.label }} {{ icon("arrow-up-right", 14) }}</a>{% endif %}
+      </div>
+      {% if item.badge %}<div class="honours">{{ item.badge }}</div>{% endif %}
+    </article>
+    {% endfor %}
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, chips, chat_widget, ext %}
+{% from "_work.html" import work_card %}
+{% block content %}
+{%- set primary = opts.hero_primary -%}
+{%- set secondary = opts.hero_secondary -%}
+
+<section class="hero">
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="container">
+    {% if opts.hero_prompt %}
+    <div class="prompt reveal"><b>$</b>{{ opts.hero_prompt }}</div>
+    {% endif %}
+    <h1 class="display reveal" style="--d:80ms;">{{ home.headline|rich }}</h1>
+
+    <div class="hero-foot">
+      <div class="reveal" style="--d:160ms;">
+        {% if personal.photo %}
+        <div class="hero-me">
+          <img src="{{ personal.photo|media }}" alt="{{ personal.full_name }}" width="56" height="56"/>
+          <div><strong>{{ personal.full_name }}</strong><span>{{ personal.tagline or personal.roles[0] }}</span></div>
+        </div>
+        {% endif %}
+        {% if home.intro %}<p class="lead">{{ home.intro|rich }}</p>{% endif %}
+        <div class="hero-actions">
+          {% set p_url = primary.url or (booking.url if booking) or url_for('contact') %}
+          {% set s_url = secondary.url or url_for('projects') %}
+          <a href="{{ p_url }}" class="btn btn-primary"{{ ext(p_url) }}>{{ primary.label or (booking.label if booking else home.cta.button) }} {{ icon("arrow-right", 17) }}</a>
+          <a href="{{ s_url }}" class="btn btn-ghost"{{ ext(s_url) }}>{{ secondary.label or "See my work" }}</a>
+        </div>
+      </div>
+      {% if personal.roles %}
+      <ul class="roles reveal" style="--d:240ms;" aria-label="Disciplines">
+        {% for r in personal.roles %}<li><span class="mono">{{ "%02d"|format(loop.index) }}</span> {{ r }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{# Proof band: certifications (each linked to its verification page) or, if there are none, the stats #}
+{% set show_certs = certifications and opts.cert_band %}
+{% if show_certs or home.stats %}
+<section class="section-tight pt-0">
+  <div class="container">
+    {% if show_certs %}
+    <div class="metrics reveal" style="--n:{{ [certifications|length, 4]|min }};">
+      {% for c in certifications[:4] %}
+      {% if c.url %}
+      <a class="metric" href="{{ c.url }}"{{ ext(c.url) }} aria-label="Verify {{ c.name }}">
+        <div class="metric-value">{{ c.short }} {{ icon("arrow-up-right", 16) }}</div>
+        <div class="metric-label">{{ c.issuer }}{% if c.year %} · {{ c.year }}{% endif %}</div>
+      </a>
+      {% else %}
+      <div class="metric">
+        <div class="metric-value">{{ c.short }}</div>
+        <div class="metric-label">{{ c.issuer }}{% if c.year %} · {{ c.year }}{% endif %}</div>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="metrics reveal" style="--n:{{ home.stats|length }};">
+      {% for s in home.stats %}
+      <div class="metric">
+        <div class="metric-value"><span data-count="{{ s.value }}">{{ s.value }}</span>{% if s.suffix %}<sup>{{ s.suffix }}</sup>{% endif %}</div>
+        <div class="metric-label">{{ s.label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% set n = namespace(i=0) %}
+
+{% if home.skill_groups %}
+{% set n.i = n.i + 1 %}
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow"><span class="num">{{ "%02d"|format(n.i) }}</span> {{ opts.services_eyebrow }}</div>
+        <h2 class="h2 reveal">{{ opts.services_title|rich }}</h2>
+      </div>
+    </div>
+    <div class="disciplines{{ ' three' if home.skill_groups|length is odd }}">
+      {% for g in home.skill_groups %}
+      <article class="card discipline reveal" style="--d:{{ (loop.index0 % 2) * 80 }}ms;">
+        <div class="icon-wrap">{{ icon(g.icon, 22) }}</div>
+        <h3 class="h3">{{ g.title }}</h3>
+        {% if g.description %}<p>{{ g.description }}</p>{% endif %}
+        <div class="discipline-foot">
+          <div class="chips">{{ chips(g.tags, limit=4) }}</div>
+          {% if g.meta %}<span class="discipline-meta">{{ g.meta }}</span>{% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if home.testimonials %}
+{% set n.i = n.i + 1 %}
+<section class="section pt-0">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow"><span class="num">{{ "%02d"|format(n.i) }}</span> Kind words</div>
+        <h2 class="h2 reveal">What people <em>say</em>.</h2>
+      </div>
+    </div>
+    <div class="quotes">
+      {% for t in home.testimonials %}
+      <figure class="card testimonial reveal" style="--d:{{ (loop.index0 % 3) * 80 }}ms;">
+        <blockquote>{{ t.quote }}</blockquote>
+        <figcaption><strong>{{ t.name }}</strong>{{ t.role }}</figcaption>
+      </figure>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if featured %}
+{% set n.i = n.i + 1 %}
+<section class="section pt-0">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow"><span class="num">{{ "%02d"|format(n.i) }}</span> Selected work</div>
+        <h2 class="h2 reveal">Reports, write-ups and <em>results</em>.</h2>
+      </div>
+      <a href="{{ url_for('projects') }}" class="link-arrow">All work {{ icon("arrow-right", 16) }}</a>
+    </div>
+    <div class="work-grid">
+      {% for p in featured %}{{ work_card(p, (loop.index0 % 2) * 80) }}{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if chat.enabled %}
+{% set n.i = n.i + 1 %}
+<section class="section pt-0">
+  <div class="container">
+    <div class="split split-wide split-center">
+      <div>
+        <div class="eyebrow eyebrow-gap"><span class="num">{{ "%02d"|format(n.i) }}</span> Quick questions</div>
+        <h2 class="h2 reveal">Short on time? <em>Ask</em> here.</h2>
+        <p class="lead lead-gap">
+          Ask about my experience, services or availability and get a short answer straight away. For anything detailed, get in touch.
+        </p>
+      </div>
+      <div class="reveal" style="--d:80ms;">{{ chat_widget(chat) }}</div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section pt-0">
+  <div class="container">
+    <div class="card cta reveal">
+      <div class="bg-glow" aria-hidden="true"></div>
+      <div class="eyebrow eyebrow-gap"><span class="dot{{ '' if personal.available else ' off' }}"></span> {{ personal.status_text }}</div>
+      <h2 class="h1 cta-title">{{ home.cta.title|rich }}</h2>
+      {% if home.cta.text %}<p class="lead lead-gap">{{ home.cta.text }}</p>{% endif %}
+      <div class="cta-actions">
+        {% set p_url = primary.url or (booking.url if booking) or url_for('contact') %}
+        <a href="{{ p_url }}" class="btn btn-accent"{{ ext(p_url) }}>{{ home.cta.button }} {{ icon("arrow-right", 17) }}</a>
+        {% if personal.email %}<a href="mailto:{{ personal.email }}" class="btn btn-ghost">{{ icon("mail", 17) }} {{ personal.email }}</a>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

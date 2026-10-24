@@ -1,0 +1,29 @@
+#!/sbin/openrc-run
+# OpenRC service (Alpine): gunicorn runs as an unprivileged user, never root.
+# Install: cp portfolio.openrc /etc/init.d/portfolio && chmod +x /etc/init.d/portfolio
+#          rc-update add portfolio default && rc-service portfolio start
+# Override in /etc/conf.d/portfolio: PORTFOLIO_USER, PORTFOLIO_DIR, PORT
+
+: ${PORTFOLIO_USER:=webserver}
+: ${PORTFOLIO_DIR:=/srv/portfolio-template}
+: ${PORT:=8000}
+
+name="portfolio"
+description="Security portfolio (gunicorn)"
+supervisor="supervise-daemon"
+command="${PORTFOLIO_DIR}/.venv/bin/gunicorn"
+command_args="wsgi:app --bind 127.0.0.1:${PORT}"
+command_user="${PORTFOLIO_USER}:${PORTFOLIO_USER}"
+directory="${PORTFOLIO_DIR}"
+respawn_delay=5
+output_log="/var/log/portfolio.log"
+error_log="/var/log/portfolio.log"
+
+depend() {
+    need net
+    after firewall
+}
+
+start_pre() {
+    checkpath -f -o "${command_user}" -m 0640 /var/log/portfolio.log
+}

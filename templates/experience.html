@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, chips, ext %}
+{% block content %}
+
+<section class="hero hero-page">
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="prompt eyebrow-hero reveal"><b>$</b>{{ pages.experience.command }}</div>
+    <h1 class="h1 reveal headline-narrow" style="--d:80ms;">{{ pages.experience.headline|rich }}</h1>
+    {% if pages.experience.lead %}<p class="lead lead-gap reveal" style="--d:160ms;">{{ pages.experience.lead }}</p>{% endif %}
+  </div>
+</section>
+
+<section class="section pt-sm">
+  <div class="container">
+    {% if items %}
+    <div class="timeline">
+      {% for item in items %}
+      <article class="tl-item reveal{{ ' is-current' if item.current }}">
+        <div class="tl-when">
+          <span>{{ item.period }}</span>
+          {% if item.location %}<span>{{ item.location }}</span>{% endif %}
+          {% if item.current %}<span class="current"><span class="dot"></span> Current</span>{% endif %}
+        </div>
+        <div>
+          <h3 class="h3">{{ item.role }}</h3>
+          <div class="tl-company">{% if item.url %}<a href="{{ item.url }}" class="link-arrow"{{ ext(item.url) }}>{{ item.company }} {{ icon("arrow-up-right", 14) }}</a>{% else %}{{ item.company }}{% endif %}</div>
+          {% if item.bullets %}<ul>{% for b in item.bullets %}<li>{{ b }}</li>{% endfor %}</ul>{% endif %}
+          <div class="chips">{{ chips(item.skills) }}</div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if certifications %}
+    <div class="section-head{{ ' section-gap' if items }}">
+      <div>
+        <div class="eyebrow">Certifications</div>
+        <h2 class="h2">Verified <em>credentials</em>.</h2>
+      </div>
+    </div>
+    <div class="cert-grid">
+      {% for c in certifications %}
+      <div class="card cert reveal" style="--d:{{ (loop.index0 % 2) * 60 }}ms;">
+        <div class="icon-wrap">{{ icon(c.icon, 20) }}</div>
+        <div>
+          <h3 class="h3 cert-name">{{ c.name }}</h3>
+          <p class="faint mono cert-meta">{{ c.issuer }}{% if c.year %} · {{ c.year }}{% endif %}</p>
+          {% if c.url %}<a class="cert-verify" href="{{ c.url }}"{{ ext(c.url) }}>Verify {{ icon("arrow-up-right", 13) }}</a>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if education %}
+    <div class="section-head section-gap">
+      <div>
+        <div class="eyebrow">Education</div>
+        <h2 class="h2">Where it <em>started</em>.</h2>
+      </div>
+    </div>
+    {% for item in education %}
+    <article class="card edu-card reveal">
+      <div>
+        <div class="eyebrow eyebrow-sm">{{ item.period }}</div>
+        <h3 class="h3 edu-title">{{ item.school or item.title }}</h3>
+        <p class="muted edu-sub">{{ item.title if item.school else item.subtitle }}{% if item.school and item.subtitle %} · {{ item.subtitle }}{% endif %}</p>
+        {% if item.notes %}<ul>{% for n in item.notes %}<li>{{ n }}</li>{% endfor %}</ul>{% endif %}
+        {% if item.link %}<a href="{{ item.link.url }}"{{ ext(item.link.url) }} class="link-arrow edu-link">{{ item.link.label }} {{ icon("arrow-up-right", 14) }}</a>{% endif %}
+      </div>
+      {% if item.badge %}<div class="honours">{{ item.badge }}</div>{% endif %}
+    </article>
+    {% endfor %}
+    {% endif %}
+
+    <div class="btn-row section-gap-sm">
+      <a href="{{ url_for('resume') }}" class="btn btn-primary" target="_blank" rel="noopener">{{ icon("download", 17) }} Full résumé</a>
+      <a href="{{ url_for('projects') }}" class="btn btn-ghost">See the work {{ icon("arrow-right", 17) }}</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

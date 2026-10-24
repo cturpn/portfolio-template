@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, ext, contact_form %}
+{% block content %}
+
+<section class="hero hero-page">
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="prompt eyebrow-hero reveal"><b>$</b>{{ pages.contact.command }}</div>
+    <h1 class="h1 reveal headline-narrow" style="--d:80ms;">{{ pages.contact.headline|rich }}</h1>
+    {% if pages.contact.lead %}<p class="lead lead-gap reveal" style="--d:160ms;">{{ pages.contact.lead }}</p>{% endif %}
+  </div>
+</section>
+
+<section class="section pt-sm">
+  <div class="container split">
+    <div class="reveal">
+      <ul class="contact-list">
+        {% for l in links_for("contact") %}
+        <li><a href="{{ l.url }}"{{ ext(l) }}><span><span class="label">{{ l.label }}</span>{{ l.display }}</span>{{ icon("arrow-up-right", 20) }}</a></li>
+        {% endfor %}
+      </ul>
+      <p class="faint status-line">
+        <span class="dot{{ '' if personal.available else ' off' }}"></span>
+        {{ personal.status_text }}{% if personal.location %} · {{ personal.location }}{% endif %}{% if personal.timezone %}, {{ personal.timezone }}{% endif %}
+      </p>
+      {% if contact_info.intro or contact_info.response_time %}
+      <p class="muted contact-note">{{ contact_info.intro }} {{ contact_info.response_time }}</p>
+      {% endif %}
+    </div>
+
+    <div class="reveal" style="--d:80ms;">
+      {% if contact_info.booking %}
+      <div class="card booking-card">
+        <div>
+          <h2 class="h3">{{ contact_info.booking.label }}</h2>
+          <p>{{ contact_info.booking.text }}</p>
+        </div>
+        <a href="{{ contact_info.booking.url }}" class="btn btn-primary"{{ ext(contact_info.booking.url) }}>Book a call {{ icon("arrow-up-right", 16) }}</a>
+      </div>
+      <div class="or-divider">or send a message</div>
+      {% endif %}
+      <div class="card form-card">
+        {{ contact_form(contact_info) }}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
